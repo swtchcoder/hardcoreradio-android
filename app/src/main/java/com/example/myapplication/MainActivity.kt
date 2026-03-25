@@ -64,7 +64,8 @@ import androidx.graphics.shapes.Morph
 import com.example.myapplication.ui.theme.MyApplicationTheme
 
 var mediaPlayer: MediaPlayer? = null
-var isReady: Boolean = false
+var isMusicReady: Boolean = false
+var isMusicPlaying by mutableStateOf(false)
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,11 +81,13 @@ class MainActivity : ComponentActivity() {
             )
             setDataSource(url)
             setOnPreparedListener {
-                isReady = true
+                isMusicReady = true
+                isMusicPlaying = true
                 it.start()
             }
             setOnErrorListener { _, _, _ ->
-                isReady = false
+                isMusicReady = false
+                isMusicPlaying = false
                 Toast.makeText(this@MainActivity, "Stream error", Toast.LENGTH_LONG).show()
                 true
             }
@@ -241,21 +244,20 @@ fun MyVisualizer() {
 
 @Composable
 fun MyPlayButton() {
-    var isPlaying by remember { mutableStateOf(true) }
     Button(
         onClick = {
-            if (!isReady) {
+            if (!isMusicReady) {
                 return@Button
             }
-            if (isPlaying) {
+            if (isMusicPlaying) {
                 mediaPlayer?.pause()
             } else {
                 mediaPlayer?.start()
             }
-            isPlaying = !isPlaying
+            isMusicPlaying = !isMusicPlaying
         },
     ) {
-        MyPlayIcon(isPlaying)
+        MyPlayIcon(isMusicPlaying)
     }
 }
 
