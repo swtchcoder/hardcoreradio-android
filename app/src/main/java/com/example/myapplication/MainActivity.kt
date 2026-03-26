@@ -1,8 +1,15 @@
 package com.example.myapplication
 
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.Service
+import android.content.Intent
 import android.media.AudioAttributes
 import android.media.MediaPlayer
+import android.net.wifi.WifiManager
 import android.os.Bundle
+import android.os.PowerManager
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -62,39 +69,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.core.app.NotificationCompat
 import androidx.graphics.shapes.Morph
 import com.example.myapplication.ui.theme.MyApplicationTheme
 
 var mediaPlayer: MediaPlayer? = null
-var isMusicReady: Boolean = false
+var isMusicReady by mutableStateOf(false)
 var isMusicPlaying by mutableStateOf(false)
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val url = "https://stream.hardcoreradio.nl:9000/hcr.ogg"
-        mediaPlayer = MediaPlayer().apply {
-            setAudioAttributes(
-                AudioAttributes.Builder()
-                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                    .setUsage(AudioAttributes.USAGE_MEDIA)
-                    .build()
-            )
-            setDataSource(url)
-            setOnPreparedListener {
-                isMusicReady = true
-                isMusicPlaying = true
-                it.start()
-            }
-            setOnErrorListener { _, _, _ ->
-                isMusicReady = false
-                isMusicPlaying = false
-                Toast.makeText(this@MainActivity, "Stream error", Toast.LENGTH_LONG).show()
-                true
-            }
-            prepareAsync()
-        }
+        startForegroundService(Intent(this, RadioService::class.java))
 
         enableEdgeToEdge()
         setContent {
@@ -131,10 +118,72 @@ class MainActivity : ComponentActivity() {
     }
 
     override fun onDestroy() {
-        mediaPlayer?.release()
-        mediaPlayer = null
+        stopService(Intent(this, RadioService::class.java))
         super.onDestroy()
     }
+}
+
+class RadioService : Service() {
+    private var wifiLock: WifiManager.WifiLock? = null
+
+    override fun onCreate() {
+        super.onCreate()
+        val url = "https://stream.hardcoreradio.nl:9000/hcr.ogg"
+        val wifiManager = getSystemService(WIFI_SERVICE) as WifiManager
+        wifiLock = wifiManager.createWifiLock(WifiManager.WIFI_MODE_FULL_LOW_LATENCY, "radio_lock")
+        wifiLock?.acquire()
+        mediaPlayer = MediaPlayer().apply {
+            setAudioAttributes(
+                AudioAttributes.Builder()
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .build()
+            )
+            setDataSource(url)
+            setWakeMode(applicationContext, PowerManager.PARTIAL_WAKE_LOCK)
+            setOnPreparedListener {
+                isMusicReady = true
+                isMusicPlaying = true
+                it.start()
+            }
+            setOnErrorListener { _, _, _ ->
+                isMusicReady = false
+                isMusicPlaying = false
+                Toast.makeText(applicationContext, "Stream error", Toast.LENGTH_LONG).show()
+                true
+            }
+            prepareAsync()
+        }
+        startForeground(1, createNotification())
+    }
+
+    private fun createNotification(): Notification {
+        val channelId = "radio_playback"
+        val channel = NotificationChannel(
+            channelId,
+            "Radio Playback",
+            NotificationManager.IMPORTANCE_LOW
+        )
+        val manager = getSystemService(NotificationManager::class.java)
+        manager.createNotificationChannel(channel)
+        return NotificationCompat.Builder(this, channelId)
+            .setContentText("Currently playing")
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setOngoing(true)
+            .build()
+    }
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        return START_STICKY
+    }
+
+    override fun onDestroy() {
+        mediaPlayer?.release()
+        wifiLock?.release()
+        super.onDestroy()
+    }
+
+    override fun onBind(intent: Intent?) = null
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
