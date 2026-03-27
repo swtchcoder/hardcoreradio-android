@@ -81,13 +81,6 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MyTopBar() {
     TopAppBar(
-        navigationIcon = {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                contentDescription = "Launcher Foreground",
-                tint = Color.Unspecified
-            )
-        },
         title = {
             Text(
                 stringResource(R.string.app_name),
