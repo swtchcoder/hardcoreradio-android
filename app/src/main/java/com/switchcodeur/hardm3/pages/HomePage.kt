@@ -1,4 +1,4 @@
-package com.example.myapplication.pages
+package com.switchcodeur.hardm3.pages
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,9 +9,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.myapplication.components.MediaVisualizer
-import com.example.myapplication.components.PlayIcon
-import com.example.myapplication.services.RadioService
+import com.switchcodeur.hardm3.components.MediaVisualizer
+import com.switchcodeur.hardm3.components.PlayIcon
+import com.switchcodeur.hardm3.services.RadioService
 
 @Composable
 fun HomePage() {

@@ -1,4 +1,4 @@
-package com.example.myapplication.theme
+package com.switchcodeur.hardm3.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

@@ -1,4 +1,4 @@
-package com.example.myapplication.components
+package com.switchcodeur.hardm3.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home

@@ -1,4 +1,4 @@
-package com.example.myapplication
+package com.switchcodeur.hardm3
 
 import android.content.Intent
 import android.os.Bundle
@@ -24,12 +24,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import com.example.myapplication.theme.MyApplicationTheme
-import com.example.myapplication.components.HomeIcon
-import com.example.myapplication.components.SettingsIcon
-import com.example.myapplication.services.RadioService
-import com.example.myapplication.pages.HomePage
-import com.example.myapplication.pages.SettingsPage
+import com.switchcodeur.hardm3.theme.MyApplicationTheme
+import com.switchcodeur.hardm3.components.HomeIcon
+import com.switchcodeur.hardm3.components.SettingsIcon
+import com.switchcodeur.hardm3.services.RadioService
+import com.switchcodeur.hardm3.pages.HomePage
+import com.switchcodeur.hardm3.pages.SettingsPage
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

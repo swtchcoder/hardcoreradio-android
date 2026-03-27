@@ -1,4 +1,4 @@
-package com.example.myapplication.pages
+package com.switchcodeur.hardm3.pages
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize

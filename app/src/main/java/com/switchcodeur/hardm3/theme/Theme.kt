@@ -1,4 +1,4 @@
-package com.example.myapplication.theme
+package com.switchcodeur.hardm3.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

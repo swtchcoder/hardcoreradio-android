@@ -1,4 +1,4 @@
-package com.example.myapplication.components
+package com.switchcodeur.hardm3.components
 
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode

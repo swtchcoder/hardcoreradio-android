@@ -1,4 +1,4 @@
-package com.example.myapplication.services
+package com.switchcodeur.hardm3.services
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -14,7 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.core.app.NotificationCompat
-import com.example.myapplication.R
+import com.switchcodeur.hardm3.R
 
 class RadioService : Service() {
     private val url = "https://stream.hardcoreradio.nl:9000/hcr.ogg"
